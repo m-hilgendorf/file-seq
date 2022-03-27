@@ -9,4 +9,5 @@ jobs:
       - name: Install Stanza
         run: ./scripts/install-stanza.sh
       - name: Run Tests
-        run: stanza-0.15.12/stanza run-test semver
+        run: stanza-0.15.12/stanza run-test file-seq/tests
+
