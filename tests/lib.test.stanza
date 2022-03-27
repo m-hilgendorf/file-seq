@@ -1,0 +1,13 @@
+#use-added-syntax(tests)
+defpackage file-seq/test : 
+  import core
+  import file-seq
+
+deftest file-loc-printer : 
+  let : 
+    val loc = FileLocation("path/to/thing", 1, 2)
+    #EXPECT(to-string(loc) == "path/to/thing:1:2")
+  let : 
+    val loc = FileLocation(false, 1, 2)
+    #EXPECT(to-string(loc) == "NoFile:1:2")
+  

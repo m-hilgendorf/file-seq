@@ -1,0 +1,6 @@
+include "src/stanza.proj"
+include "tests/stanza.proj"
+
+build test:
+  inputs: file-seq/test
+  o: "file-seq-test"

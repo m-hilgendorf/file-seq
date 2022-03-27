@@ -1,0 +1,64 @@
+defpackage file-seq :
+  import core
+
+;==================================================================================================
+;=========================================== API ==================================================
+;==================================================================================================
+
+doc: "A FileLocation is a location within a file. Renamed to not 
+      interfere with the original definition of [FileInfo]."
+public defstruct FileLocation : 
+  path?:False|String
+  line:Int
+  column:Int
+
+doc: "A [FileSeq] is a sequence of chars read from a file."
+public deftype FileSeq <: Seq<Char>
+
+doc: "Retrieve the current location (line and column) of the sequence in the file."
+public defmulti loc (f:FileSeq) -> FileLocation
+
+doc: "Close the underlying input stream."
+public defmulti close (f:FileSeq) -> False
+
+doc: "Construct a new [FileSeq]."
+public defn FileSeq (path:String) : 
+  val istream = FileInputStream(path)
+  var line   = 1
+  var column = 1
+
+  val chars = generate : 
+    let loop (ch = get-char(istream)) : 
+      match(ch:Char) :
+        yield(ch)
+        loop(get-char(istream)) 
+      else : 
+        close(istream)
+
+  new FileSeq : 
+    defmethod loc (this) : 
+      FileLocation(path, line, column) 
+    defmethod empty? (this) : 
+      empty?(chars)
+    defmethod close (this) : 
+      close(istream)
+    defmethod next (this) : 
+      var ch = next(chars)
+      if ch == '\r' and peek(chars) == '\n' : 
+        ch = next(chars)
+      if ch == '\n' : 
+        line   = line + 1
+        column = 1
+      else : 
+        column = column + 1
+      ch
+
+;==================================================================================================
+;====================================== Printers ==================================================
+;==================================================================================================
+defmethod print (o:OutputStream, loc:FileLocation) : 
+  val path = 
+    match(path?(loc)) : 
+      (s:String) : s
+      (f:False)  : "NoFile"
+  print(o, "%_:%_:%_" % [path, line(loc), column(loc)])

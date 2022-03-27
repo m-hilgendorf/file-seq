@@ -1,0 +1,12 @@
+name: Build and Test
+on: push
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Stanza
+        run: ./scripts/install-stanza.sh
+      - name: Run Tests
+        run: stanza-0.15.12/stanza run-test semver
