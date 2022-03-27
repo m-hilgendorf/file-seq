@@ -1,3 +1,5 @@
+[![Build and Test](https://github.com/m-hilgendorf/file-seq/actions/workflows/ci.yml/badge.svg)](https://github.com/m-hilgendorf/file-seq/actions/workflows/ci.yml)
+
 # `file-seq`
 ## Description
 
